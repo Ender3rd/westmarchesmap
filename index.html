@@ -1,0 +1,83 @@
+<head>;
+    <link rel="stylesheet" type="text/css" href="tooltipster/dist/css/tooltipster.bundle.min.css" />
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+    <script type="text/javascript" src="tooltipster/dist/js/tooltipster.bundle.min.js"></script>
+    <script type="text/javascript" src="annotations.js"></script>
+	<script>
+		// ideas from https://www.redblobgames.com/grids/hexagons/#basics odd-q vertical layout
+		var generateCoOrdinates = function(desc) {
+			/*
+				throal top left: 1280,700
+				throal top right: 1325, 700
+				tcr: 1260,735
+				tbr: 1325, 770
+				tbl: 1280, 770
+				tcl: 1345, 735
+			*/
+			var startingHex = {}; // throal
+			startingHex.topLeft = {};
+			startingHex.topRight = {};
+			startingHex.centerLeft = {};
+			startingHex.centerRight = {};
+			startingHex.bottomLeft = {};
+			startingHex.bottomRight = {};
+			startingHex.topLeft.x = 1280;
+			startingHex.topLeft.y = 695;
+			startingHex.topRight.x = 1325;
+			startingHex.topRight.y = 695;
+			startingHex.centerLeft.x = 1260;
+			startingHex.centerLeft.y = 733;
+			startingHex.centerRight.x = 1345;
+			startingHex.centerRight.y = 733;
+			startingHex.bottomLeft.x = 1280;
+			startingHex.bottomLeft.y = 770;
+			startingHex.bottomRight.x = 1325;
+			startingHex.bottomRight.y = 770;
+			startingHex.col = 43
+			startingHex.row = 9;
+			
+			var hexWidth = startingHex.centerRight.x - startingHex.centerLeft.x;
+			var hexHeight = startingHex.bottomLeft.y - startingHex.topLeft.y;
+			
+			var destCoOrds = desc.split(".",2);
+			var destinationHex = {}; 
+			destinationHex.col = parseInt(destCoOrds[0]);
+			destinationHex.row = parseInt(destCoOrds[1]);
+			
+			var hexesRight = destinationHex.col - startingHex.col;
+			var hexesDown = destinationHex.row - startingHex.row;
+			if(((destinationHex.row % 2) === 0)) {
+				hexesDown -= 0.5;
+			}
+			var translationX = Math.floor((3 * hexesRight * hexWidth) / 4);
+			var translationY = Math.floor(hexesDown * hexHeight);
+			
+			return (startingHex.topLeft.x + translationX) + "," + (startingHex.topLeft.y + translationY)
+				+ "," + (startingHex.topRight.x + translationX) + "," + (startingHex.topRight.y + translationY)
+				+ "," + (startingHex.centerRight.x + translationX) + "," + (startingHex.centerRight.y + translationY)
+				+ "," + (startingHex.bottomRight.x + translationX) + "," + (startingHex.bottomRight.y + translationY)
+				+ "," + (startingHex.bottomLeft.x + translationX) + "," + (startingHex.bottomLeft.y + translationY)
+				+ "," + (startingHex.centerLeft.x + translationX) + "," + (startingHex.centerLeft.y + translationY);
+		}
+	
+        $(document).ready(function() {
+			var locationList = $("#barsaive map");
+			
+			$.each(annotations, function(key, value) {
+				locationList.append('<area shape="poly" coords="' + generateCoOrdinates(key) + '" title="' + value + '" class="tooltip"/>');
+			});
+		
+            $('barsaive map area').tooltipster({
+				theme: 'tooltipster-light'
+			});
+        });
+    </script>
+</head>
+<html>
+	<span id="barsaive">
+		<img src="https://cdn.discordapp.com/attachments/350435290139066389/379320790165880842/map11-12-17b.png" usemap="#locations"/>
+		<map name="locations">
+		</map>
+	</span>
+</html>
