@@ -3,6 +3,7 @@
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.0.min.js"></script>
     <script type="text/javascript" src="tooltipster/dist/js/tooltipster.bundle.min.js"></script>
+    <script type="text/javascript" src="jquery-throttle-debounce-master/jquery.ba-throttle-debounce.min.js"></script>
     <script type="text/javascript" src="annotations.js"></script>
 	<script>
 		// ideas from https://www.redblobgames.com/grids/hexagons/#basics odd-q vertical layout
@@ -53,16 +54,29 @@
 			var translationX = Math.floor((3 * hexesRight * hexWidth) / 4);
 			var translationY = Math.floor(hexesDown * hexHeight);
 			
-			return (startingHex.topLeft.x + translationX) + "," + (startingHex.topLeft.y + translationY)
-				+ "," + (startingHex.topRight.x + translationX) + "," + (startingHex.topRight.y + translationY)
-				+ "," + (startingHex.centerRight.x + translationX) + "," + (startingHex.centerRight.y + translationY)
-				+ "," + (startingHex.bottomRight.x + translationX) + "," + (startingHex.bottomRight.y + translationY)
-				+ "," + (startingHex.bottomLeft.x + translationX) + "," + (startingHex.bottomLeft.y + translationY)
-				+ "," + (startingHex.centerLeft.x + translationX) + "," + (startingHex.centerLeft.y + translationY);
+			return scaleResultX(startingHex.topLeft.x + translationX) + "," + scaleResultY(startingHex.topLeft.y + translationY)
+				+ "," + scaleResultX(startingHex.topRight.x + translationX) + "," + scaleResultY(startingHex.topRight.y + translationY)
+				+ "," + scaleResultX(startingHex.centerRight.x + translationX) + "," + scaleResultY(startingHex.centerRight.y + translationY)
+				+ "," + scaleResultX(startingHex.bottomRight.x + translationX) + "," + scaleResultY(startingHex.bottomRight.y + translationY)
+				+ "," + scaleResultX(startingHex.bottomLeft.x + translationX) + "," + scaleResultY(startingHex.bottomLeft.y + translationY)
+				+ "," + scaleResultX(startingHex.centerLeft.x + translationX) + "," + scaleResultY(startingHex.centerLeft.y + translationY);
+		};
+		
+		var scaleResultX = function(unscaledCoordinate)  {
+			var image = $("#barsaive img");
+			var baseHeight = 1998;
+			return Math.floor(unscaledCoordinate * image.height() / baseHeight);
 		}
-	
-        $(document).ready(function() {
+		
+		var scaleResultY = function(unscaledCoordinate) {
+			var image = $("#barsaive img");
+			var baseWidth = 2655;
+			return Math.floor(unscaledCoordinate * image.width() / baseWidth);
+		}
+		
+		var calculateToolTips = function() {
 			var locationList = $("#barsaive map");
+			locationList.empty();
 			
 			$.each(annotations, function(key, value) {
 				locationList.append('<area shape="poly" coords="' + generateCoOrdinates(key) + '" title="' + value + '" class="tooltip"/>');
@@ -71,12 +85,21 @@
             $('barsaive map area').tooltipster({
 				theme: 'tooltipster-light'
 			});
-        });
+        }
+	
+        $(document).ready(calculateToolTips);
+		var onResize = $.debounce(250, calculateToolTips);
+        $("#barsaive img").resize(onResize);
+		$(document).resize(onResize);
+		$(window).resize(onResize);
     </script>
 </head>
 <html>
 	<span id="barsaive">
-		<img src="https://cdn.discordapp.com/attachments/350435290139066389/379320790165880842/map11-12-17b.png" usemap="#locations" style="width: 100%;height: auto;"/>
+		<img src="https://cdn.discordapp.com/attachments/350435290139066389/379320790165880842/map11-12-17b.png" usemap="#locations" style="
+			width: 100%;
+			height: auto;
+		"/>
 		<map name="locations">
 		</map>
 	</span>
