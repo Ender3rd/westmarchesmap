@@ -12,7 +12,6 @@ window.annotations = {
 	"42.06": "Blood Bee Hive",
 	"42.08": "Horror Spotted Here",
 	"42.09": "Crystal Kaer",
-	"42.14": "Cultist Kaer",
 	"46.06": "Harpy Tower",
 	"47.06": "Approximate location of Wolf Father's Library",
 	"39.13": "Cultist of Raggok Kaer"
