@@ -14,5 +14,6 @@ window.annotations = {
 	"42.09": "Crystal Kaer",
 	"46.06": "Harpy Tower",
 	"47.06": "Approximate location of Wolf Father's Library",
-	"39.13": "Cultist of Raggok Kaer"
+	"39.13": "Cultist of Raggok Kaer",
+	"45:10": "L'Krusk's hideout"
 };
